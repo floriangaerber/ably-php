@@ -4,6 +4,7 @@ use Ably\AblyRest;
 use Ably\Models\DeviceDetails;
 use Ably\Models\PaginatedResult;
 use Ably\Exceptions\AblyException;
+use Ably\Exceptions\AblyRequestException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
@@ -137,9 +138,10 @@ class PushDeviceRegistrationsTest extends TestCase {
 
     /**
      * @dataProvider badValues
-     * @expectedException Ably\Exceptions\AblyRequestException
      */
     public function testSaveInvalid($data) {
+        $this->expectException(AblyRequestException::class);
+
         self::$ably->push->admin->deviceRegistrations->save($data);
     }
 
