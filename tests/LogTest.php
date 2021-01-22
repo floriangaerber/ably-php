@@ -71,22 +71,11 @@ class LogTest extends TestCase {
 
         $ably = new AblyRest( $opts );
         $this->logMessages();
-        
-        if (strpos($out, 'This is a test warning.') === false) {
-            $this->fail('Expected warning level to be logged.');
-        }
 
-        if (strpos($out, 'This is a test error.') === false) {
-            $this->fail('Expected error level to be logged.');
-        }
-
-        if (strpos($out, 'This is a test verbose message.') === false) {
-            $this->fail('Expected verbose level to be logged.');
-        }
-
-        if (strpos($out, 'This is a test debug message.') === false) {
-            $this->fail('Expected debug level to be logged.');
-        }
+        $this->assertStringContainsString('This is a test warning.', $out, 'Expected warning level to be logged.');
+        $this->assertStringContainsString('This is a test error.', $out, 'Expected error level to be logged.');
+        $this->assertStringContainsString('This is a test verbose message.', $out, 'Expected verbose level to be logged.');
+        $this->assertStringContainsString('This is a test debug message.', $out, 'Expected debug level to be logged.');
     }
 
     /**
