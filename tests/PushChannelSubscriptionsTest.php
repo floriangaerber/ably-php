@@ -180,9 +180,10 @@ class PushChannelSubscriptionsTest extends TestCase {
 
     /**
      * @dataProvider badValues
-     * @expectedException Ably\Exceptions\AblyException
      */
     public function testSaveInvalid($data) {
+        $this->expectException(AblyException::class);
+
         self::$ably->push->admin->channelSubscriptions->save($data);
     }
 

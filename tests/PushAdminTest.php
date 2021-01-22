@@ -1,6 +1,8 @@
 <?php
 namespace tests;
 use Ably\AblyRest;
+use Ably\Exceptions\AblyRequestException;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
@@ -56,9 +58,10 @@ class PushAdminTest extends TestCase {
 
     /**
      * @dataProvider badValues
-     * @expectedException InvalidArgumentException
      */
     public function testAdminPublishInvalid($recipient, $data) {
+        $this->expectException(InvalidArgumentException::class);
+
         self::$ably->push->admin->publish( $recipient, $data );
     }
 
@@ -73,9 +76,10 @@ class PushAdminTest extends TestCase {
 
     /**
      * @dataProvider errorValues
-     * @expectedException Ably\Exceptions\AblyRequestException
      */
     public function testAdminPublishError($recipient, $data) {
+        $this->expectException(AblyRequestException::class);
+
         self::$ably->push->admin->publish( $recipient, $data );
     }
 
