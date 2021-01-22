@@ -98,7 +98,7 @@ class AblyRestTest extends TestCase {
         ];
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
-        $this->assertContains( 'https://' . $opts['restHost'] . ':' . $opts['tlsPort'], $ably->http->lastUrl, 'Unexpected host/port mismatch' );
+        $this->assertStringContainsString( 'https://' . $opts['restHost'] . ':' . $opts['tlsPort'], $ably->http->lastUrl, 'Unexpected host/port mismatch' );
 
         $opts = [
             'token' => 'fakeToken',
