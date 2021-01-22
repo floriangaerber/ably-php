@@ -53,7 +53,7 @@ class HttpTest extends TestCase {
         $ably->time(); // make a request
 
         $curlParams = $ably->http->getCurlLastParams();
-        $this->assertContains( 'php-test-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected X-Ably-Lib to contain library flavour string' );
+        $this->assertStringContainsString( 'php-test-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected X-Ably-Lib to contain library flavour string' );
 
         AblyRest::setLibraryFlavourString();
     }
