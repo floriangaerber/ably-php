@@ -4,12 +4,12 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <listeners>
+    <!-- <listeners>
         <listener file="tests/extensions/DebugTestListener.php" class="DebugTestListener" />
-    </listeners>
-    <filter>
+    </listeners> -->
+    <!-- <filter>
         <blacklist>
             <directory suffix=".php">tests</directory>
         </blacklist>
-    </filter>
+    </filter> -->
 </phpunit>
