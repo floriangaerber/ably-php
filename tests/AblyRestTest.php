@@ -83,7 +83,7 @@ class AblyRestTest extends TestCase {
         ];
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^https?:\/\/some\.other\.host/', $ably->http->lastUrl, 'Unexpected host mismatch' );
+        $this->assertMatchesRegularExpression( '/^https?:\/\/some\.other\.host/', $ably->http->lastUrl, 'Unexpected host mismatch' );
     }
 
     /**
@@ -122,7 +122,7 @@ class AblyRestTest extends TestCase {
             'httpClass' => 'tests\HttpMockInitTest',
         ] );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^https?:\/\/sandbox-rest\.ably\.io\//', $ably->http->lastUrl, 'Unexpected host mismatch' );
+        $this->assertMatchesRegularExpression( '/^https?:\/\/sandbox-rest\.ably\.io\//', $ably->http->lastUrl, 'Unexpected host mismatch' );
     }
 
     /**
@@ -136,7 +136,7 @@ class AblyRestTest extends TestCase {
             'httpClass' => 'tests\HttpMockInitTest',
         ] );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^https?:\/\/sandbox-some\.other\.host\//', $ably->http->lastUrl, 'Unexpected host mismatch' );
+        $this->assertMatchesRegularExpression( '/^https?:\/\/sandbox-some\.other\.host\//', $ably->http->lastUrl, 'Unexpected host mismatch' );
     }
 
     /**
@@ -149,7 +149,7 @@ class AblyRestTest extends TestCase {
         ];
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^https:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
+        $this->assertMatchesRegularExpression( '/^https:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
     }
 
     /**
@@ -163,7 +163,7 @@ class AblyRestTest extends TestCase {
         ];
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^http:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
+        $this->assertMatchesRegularExpression( '/^http:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
     }
 
     /**
@@ -177,7 +177,7 @@ class AblyRestTest extends TestCase {
         ];
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
-        $this->assertRegExp( '/^https:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
+        $this->assertMatchesRegularExpression( '/^https:\/\/rest\.ably\.io/', $ably->http->lastUrl, 'Unexpected scheme/url mismatch' );
     }
 
     /**
@@ -239,7 +239,7 @@ class AblyRestTest extends TestCase {
         } catch(AblyRequestException $e) {
            $this->assertEquals( $hostWithFallbacks[0], $ably->http->failedHosts[0], 'Expected to try restHost first' );
             // $this->assertNotEquals( $hostWithFallbacks, $ably->http->failedHosts, 'Expected to have fallback hosts randomized' ); // this may fail when randomized order matches the original order
-            
+
            $failedHostsSorted = $ably->http->failedHosts; // copied by value;
            sort($failedHostsSorted);
            $this->assertEquals( $hostWithFallbacksSorted, $failedHostsSorted, 'Expected to have tried all the fallback hosts' );
@@ -300,7 +300,7 @@ class AblyRestTest extends TestCase {
         $ably = new AblyRest( $opts );
         $ably->http->failAttempts = 3;
         $data = $ably->time(); // make a request
-        
+
         $this->assertEquals( 999999, $data, 'Expected to receive test data' );
         $this->assertEquals( 3, count( $ably->http->failedHosts ), 'Expected 3 hosts to fail' );
     }
@@ -412,7 +412,7 @@ class AblyRestTest extends TestCase {
 
 class HttpMockInitTest extends Http {
     public $lastUrl;
-    
+
     public function request($method, $url, $headers = [], $params = []) {
         $this->lastUrl = $url;
 
@@ -430,13 +430,13 @@ class HttpMockInitTestTimeout extends Http {
     public $failAttempts = 100; // number of attempts to time out before starting to return data
     public $httpErrorCode = 500;
     public $errorCode = 50003; // timeout
-    
+
     public function request($method, $url, $headers = [], $params = []) {
 
         if ($this->failAttempts > 0) {
             preg_match('/\/\/([a-z0-9\.\-]+)\//', $url, $m);
             $this->failedHosts[] = $m[1];
-            
+
             $this->failAttempts--;
 
             throw new AblyRequestException( 'Fake error', $this->errorCode, $this->httpErrorCode );
