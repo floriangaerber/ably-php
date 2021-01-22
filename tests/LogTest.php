@@ -2,12 +2,13 @@
 namespace tests;
 use Ably\AblyRest;
 use Ably\Log;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class LogTest extends \PHPUnit_Framework_TestCase {
+class LogTest extends TestCase {
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         // ensure the logger is reset to default
         $ably = new AblyRest( [
             'key' => 'fake.key:totallyFake'

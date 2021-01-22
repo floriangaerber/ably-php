@@ -5,20 +5,21 @@ use Ably\Http;
 use Ably\Exceptions\AblyRequestException;
 use Ably\Models\ClientOptions;
 use Ably\Models\TokenDetails;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class AblyRestTest extends \PHPUnit_Framework_TestCase {
+class AblyRestTest extends TestCase {
 
     protected static $testApp;
     protected static $defaultOptions;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$testApp = new \tests\TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 

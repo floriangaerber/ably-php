@@ -3,15 +3,16 @@ namespace tests;
 use Ably\AblyRest;
 use Ably\Auth;
 use Ably\Exceptions\AblyException;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class TypesTest extends \PHPUnit_Framework_TestCase {
+class TypesTest extends TestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
     }
 
     protected function verifyClassMembers( $class, $expectedMembers ) {

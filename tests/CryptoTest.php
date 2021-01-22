@@ -4,10 +4,11 @@ use Ably\Models\CipherParams;
 use Ably\Models\Message;
 use Ably\Models\PresenceMessage;
 use Ably\Utils\Crypto;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class CryptoTest extends \PHPUnit_Framework_TestCase {
+class CryptoTest extends TestCase {
 
     public function testGenerateRandomKey() {
         $keyDefault = Crypto::generateRandomKey();
