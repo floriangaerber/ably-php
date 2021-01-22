@@ -1,8 +1,10 @@
 name: CI
 
 on:
+  push:
+    branches: [main, php8]
   pull_request:
-    branches: [main]
+    branches: [main, php8]
 
 jobs:
   testsuite:
