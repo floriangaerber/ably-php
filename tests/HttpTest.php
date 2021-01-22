@@ -46,7 +46,7 @@ class HttpTest extends TestCase {
         $this->assertEquals( $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Version'], 'Expected Ably version in HTTP header to match AblyRest constant' );
 
         $this->assertArrayHasKey( 'X-Ably-Lib', $curlParams[CURLOPT_HTTPHEADER], 'Expected Ably lib header in HTTP request' );
-        $this->assertContains( 'php-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected Ably lib in HTTP header to match AblyRest constant' );
+        $this->assertStringContainsString( 'php-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected Ably lib in HTTP header to match AblyRest constant' );
 
         AblyRest::setLibraryFlavourString( 'test' );
         $ably = new AblyRest( $opts );
