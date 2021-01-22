@@ -3,10 +3,11 @@ namespace tests;
 use Ably\AblyRest;
 use Ably\Exceptions\AblyRequestException;
 use Ably\Utils\Crypto;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class PresenceTest extends \PHPUnit_Framework_TestCase {
+class PresenceTest extends TestCase {
 
     protected static $testApp;
     protected static $defaultOptions;
@@ -15,7 +16,7 @@ class PresenceTest extends \PHPUnit_Framework_TestCase {
     protected static $presenceFixture;
     protected static $channel;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
 
         self::$testApp = new TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
@@ -43,7 +44,7 @@ class PresenceTest extends \PHPUnit_Framework_TestCase {
         self::$channel = self::$ably->channel('persisted:presence_fixtures', $options);
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 

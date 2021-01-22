@@ -7,15 +7,16 @@ use Ably\Log;
 use Ably\Exceptions\AblyException;
 use Ably\Models\Message;
 use Ably\Utils\Crypto;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class ChannelMessagesTest extends \PHPUnit_Framework_TestCase {
+class ChannelMessagesTest extends TestCase {
     protected static $testApp;
     protected static $defaultOptions;
     protected static $ably;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$testApp = new TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
         self::$ably = new AblyRest( array_merge( self::$defaultOptions, [
@@ -23,7 +24,7 @@ class ChannelMessagesTest extends \PHPUnit_Framework_TestCase {
         ] ) );
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 

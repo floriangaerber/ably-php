@@ -1,16 +1,19 @@
 <?php
 namespace tests;
 use Ably\AblyRest;
+use Ably\Exceptions\AblyRequestException;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
 
-class PushAdminTest extends \PHPUnit_Framework_TestCase {
+class PushAdminTest extends TestCase {
     protected static $testApp;
     protected static $defaultOptions;
     protected static $ably;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$testApp = new TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
         self::$ably = new AblyRest( array_merge( self::$defaultOptions, [
@@ -18,7 +21,7 @@ class PushAdminTest extends \PHPUnit_Framework_TestCase {
         ] ) );
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 
@@ -55,9 +58,10 @@ class PushAdminTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider badValues
-     * @expectedException InvalidArgumentException
      */
     public function testAdminPublishInvalid($recipient, $data) {
+        $this->expectException(InvalidArgumentException::class);
+
         self::$ably->push->admin->publish( $recipient, $data );
     }
 
@@ -72,9 +76,10 @@ class PushAdminTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider errorValues
-     * @expectedException Ably\Exceptions\AblyRequestException
      */
     public function testAdminPublishError($recipient, $data) {
+        $this->expectException(AblyRequestException::class);
+
         self::$ably->push->admin->publish( $recipient, $data );
     }
 

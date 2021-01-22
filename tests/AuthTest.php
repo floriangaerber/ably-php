@@ -7,20 +7,21 @@ use Ably\Models\TokenDetails;
 use Ably\Models\TokenParams;
 use Ably\Models\TokenRequest;
 use Ably\Exceptions\AblyException;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class AuthTest extends \PHPUnit_Framework_TestCase {
+class AuthTest extends TestCase {
 
     protected static $testApp;
     protected static $defaultOptions;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$testApp = new \tests\TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 
@@ -131,7 +132,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             },
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
 
         $this->assertTrue( $callbackCalled, 'Expected token callback to be called' );
@@ -157,7 +158,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             },
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
 
         $this->assertTrue( $callbackCalled, 'Expected token callback to be called' );
@@ -179,7 +180,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             },
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
 
         $this->assertTrue( $callbackCalled, 'Expected token callback to be called' );
@@ -197,9 +198,9 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             'authUrl' => 'https://TEST/tokenRequest',
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
-        
+
         $this->assertEquals( 'mock_token_requestToken', $tokenDetails->token, 'Expected mock token to be used' );
         $this->assertFalse( $ably->auth->isUsingBasicAuth(), 'Expected token auth to be used' );
     }
@@ -212,9 +213,9 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             'authUrl' => 'https://TEST/tokenDetails',
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
-        
+
         $this->assertEquals( 'mock_token_authurl_TokenDetails', $tokenDetails->token, 'Expected mock token to be used' );
         $this->assertFalse( $ably->auth->isUsingBasicAuth(), 'Expected token auth to be used' );
     }
@@ -227,9 +228,9 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             'authUrl' => 'https://TEST/tokenString',
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $tokenDetails = $ably->auth->requestToken();
-        
+
         $this->assertEquals( 'mock_token_authurl_tokenString', $tokenDetails->token, 'Expected mock token to be used' );
         $this->assertFalse( $ably->auth->isUsingBasicAuth(), 'Expected token auth to be used' );
     }
@@ -253,9 +254,9 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             'authMethod' => $method,
             'httpClass' => 'authTest\HttpMock',
         ] ) );
-        
+
         $ably->auth->requestToken( $overriddenTokenParams );
-        
+
         $this->assertTrue( is_a( $ably->http, '\authTest\HttpMock' ) , 'Expected HttpMock class to be used' );
         $this->assertEquals( $headers, $ably->http->headers, 'Expected authHeaders to match' );
         $this->assertEquals( $expectedAuthParams, $ably->http->params, 'Expected authParams to match' );
@@ -297,7 +298,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
                 return $tokenRequest;
             },
         ] ) );
-        
+
         $ably->auth->authorize();
 
         $this->assertFalse( $ably->auth->isUsingBasicAuth(), 'Expected token auth to be used' );
@@ -399,7 +400,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
         ] ) );
 
         $this->assertTrue( $ably->auth->isUsingBasicAuth(), 'Expected basic auth to be used' );
-        
+
         $this->assertFalse( $ably->auth->requestTokenCalled, 'Expected requestToken not to be called before using authorize()' );
 
         $tokenOriginal = $ably->auth->authorize();
@@ -443,7 +444,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
             'authMethod' => 'TEST',
             'queryTime' => true,
         ];
-        
+
         // test with empty params first
         $ably->auth->authorize();
         $this->assertTrue( $ably->auth->requestTokenCalled, 'Expected authorize() to call requestToken()' );
@@ -455,7 +456,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
         $ably->auth->authorize( $tokenParams, $authOptions );
         $this->assertEquals( $tokenParams, $ably->auth->lastTokenParams, 'Expected authorize() to pass provided tokenParams to requestToken()');
         $this->assertEquals( $authOptions, $ably->auth->lastAuthOptions, 'Expected authorize() to pass provided authOptions to requestToken()');
-        
+
         $this->assertFalse ( isset ( $ably->auth->getSavedAuthorizeTokenParams()['timestamp'] ),
             'Expected authorize() to save provided tokenParams without the `timestamp` field');
         $this->assertFalse ( isset ( $ably->auth->getSavedAuthorizeAuthOptions()['force'] ),
@@ -472,7 +473,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
 
         // check if parameter overriding works correctly
         $ably->auth->authorize( [ 'ttl' => 99999 ], [ 'queryTime' => false ] );
-        
+
         $expectedTokenParams = $tokenParams; // arrays are copied by value in PHP
         $expectedTokenParams['ttl'] = 99999;
         $expectedAuthOptions = $authOptions;
@@ -515,7 +516,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
 
         $ably->get("/dummy_test");
 
-        $this->assertRegExp('/Authorization\s*:\s*Basic\s+'.base64_encode($fakeKey).'/i', $ably->http->headers[0]);
+        $this->assertMatchesRegularExpression('/Authorization\s*:\s*Basic\s+'.base64_encode($fakeKey).'/i', $ably->http->headers[0]);
     }
 
     /**
@@ -530,7 +531,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase {
 
         $ably->get("/dummy_test");
 
-        $this->assertRegExp('/Authorization\s*:\s*Bearer\s+'.base64_encode($fakeToken).'/i', $ably->http->headers[0]);
+        $this->assertMatchesRegularExpression('/Authorization\s*:\s*Bearer\s+'.base64_encode($fakeToken).'/i', $ably->http->headers[0]);
     }
 }
 
@@ -558,9 +559,9 @@ class HttpMock extends Http {
                 'keyName' => 'fakeKeyName',
                 'mac' => 'not_really_hmac',
             ] );
-            
+
             $response = json_encode( $tokenRequest->toArray() );
-            
+
             return [
                 'headers' => 'HTTP/1.1 200 OK'."\n",
                 'body' => json_decode ( $response ),
@@ -569,15 +570,15 @@ class HttpMock extends Http {
             $this->method = $method;
             $this->headers = $headers;
             $this->params = $params;
-            
+
             $tokenDetails = new TokenDetails( [
                 'token' => 'mock_token_authurl_TokenDetails',
                 'issued' => time()*1000,
                 'expires' => time()*1000 + 3600*1000,
             ] );
-            
+
             $response = json_encode( $tokenDetails->toArray() );
-            
+
             return [
                 'headers' => 'HTTP/1.1 200 OK'."\n",
                 'body' => json_decode ( $response ),
@@ -586,7 +587,7 @@ class HttpMock extends Http {
             $this->method = $method;
             $this->headers = $headers;
             $this->params = $params;
-            
+
             return [
                 'headers' => 'HTTP/1.1 200 OK'."\n",
                 'body' => 'mock_token_authurl_tokenString',
@@ -599,9 +600,9 @@ class HttpMock extends Http {
                 'issued' => time()*1000,
                 'expires' => time()*1000 + 3600*1000,
             ] );
-            
+
             $response = json_encode( $tokenDetails->toArray() );
-            
+
             return [
                 'headers' => 'HTTP/1.1 200 OK'."\n",
                 'body' => json_decode ( $response ),

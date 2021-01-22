@@ -5,16 +5,17 @@ use Ably\AblyRest;
 use Ably\Http;
 use Ably\Utils\CurlWrapper;
 use Ably\Models\Untyped;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/factories/TestApp.php';
 
-class HttpTest extends \PHPUnit_Framework_TestCase {
+class HttpTest extends TestCase {
 
     protected static $testApp;
     protected static $defaultOptions;
     protected static $ably;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$testApp = new TestApp();
         self::$defaultOptions = self::$testApp->getOptions();
         self::$ably = new AblyRest( array_merge( self::$defaultOptions, [
@@ -22,7 +23,7 @@ class HttpTest extends \PHPUnit_Framework_TestCase {
         ] ) );
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         self::$testApp->release();
     }
 
@@ -45,14 +46,14 @@ class HttpTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals( $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Version'], 'Expected Ably version in HTTP header to match AblyRest constant' );
 
         $this->assertArrayHasKey( 'X-Ably-Lib', $curlParams[CURLOPT_HTTPHEADER], 'Expected Ably lib header in HTTP request' );
-        $this->assertContains( 'php-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected Ably lib in HTTP header to match AblyRest constant' );
+        $this->assertStringContainsString( 'php-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected Ably lib in HTTP header to match AblyRest constant' );
 
         AblyRest::setLibraryFlavourString( 'test' );
         $ably = new AblyRest( $opts );
         $ably->time(); // make a request
 
         $curlParams = $ably->http->getCurlLastParams();
-        $this->assertContains( 'php-test-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected X-Ably-Lib to contain library flavour string' );
+        $this->assertStringContainsString( 'php-test-' . $expectedVersion, $curlParams[CURLOPT_HTTPHEADER]['X-Ably-Lib'], 'Expected X-Ably-Lib to contain library flavour string' );
 
         AblyRest::setLibraryFlavourString();
     }
