@@ -1,5 +1,5 @@
 {
-    "name": "floriangaerber/ably-php",
+    "name": "floriangaerber/ably-php8",
     "description": "Potentially unstable fork of ably/ably-php for PHP ^8.0",
     "replace": {
         "ably/ably-php": "1.1.3"
